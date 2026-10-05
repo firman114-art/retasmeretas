@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Retas Password Kelas 6 - Cyber Mode</title>
+    <style>
+        :root {
+            --bg: #050505;
+            --card: #0D1117;
+            --primary: #00FF66;
+            --primary-hover: #00CC52;
+            --danger: #FF0055;
+            --text: #00FF66;
+            --text-dim: #009933;
+            --border: #00FF66;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            align-items: center;
+        }
+
+        .container {
+            background-color: var(--card);
+            width: 100%;
+            max-width: 520px;
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: 0 0 20px rgba(0, 255, 102, 0.2);
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            color: var(--primary);
+            text-shadow: 0 0 8px rgba(0, 255, 102, 0.6);
+            margin-top: 0;
+        }
+
+        .view { display: none; }
+        .view.active { display: block; }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background-color: #000000;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--primary);
+            font-size: 16px;
+            outline: none;
+            box-shadow: inset 0 0 5px rgba(0, 255, 102, 0.3);
+        }
+
+        input:focus {
+            box-shadow: 0 0 10px rgba(0, 255, 102, 0.8);
+        }
+
+        input::placeholder {
+            color: var(--text-dim);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            background-color: transparent;
+            color: var(--primary);
+            transition: all 0.2s ease-in-out;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background-color: var(--primary);
+            color: #000000;
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.8);
+        }
+
+        .btn-danger {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background-color: var(--danger);
+            color: #000000;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.8);
+        }
+
+        .student-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #000000;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #1a3a1a;
+            border-radius: 4px;
+        }
+
+        .score-badge {
+            background: var(--primary);
+            color: #000000;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .password-display {
+            font-size: 28px;
+            letter-spacing: 10px;
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: #000000;
+            border: 1px dashed var(--border);
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(0, 255, 102, 0.8);
+        }
+
+        .allowed-chars {
+            font-size: 14px;
+            color: var(--primary);
+            background: #000000;
+            padding: 12px;
+            border: 1px solid #1a3a1a;
+            border-radius: 4px;
+            text-align: center;
+            word-spacing: 6px;
+            margin-bottom: 15px;
+        }
+
+        .question-box {
+            background: #000000;
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px dashed var(--text-dim);
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- VIEW: HOME -->
+    <div id="view-home" class="view active">
+        <h1>[ SYSTEM_ACCESS ]</h1>
+        <p style="text-align:center; color: var(--text-dim);">SYSTEM_STATUS: ONLINE</p>
+        <button onclick="showView('view-teacher-login')">ADMIN / GURU LOGIN</button>
+        <hr>
+        <h3>AKSES SISWA</h3>
+        <input type="text" id="join-pin" placeholder="> Masukkan PIN Akses" maxlength="4">
+        <button onclick="joinGame()">HUBUNGKAN KELAS</button>
+    </div>
+
+    <!-- VIEW: TEACHER LOGIN -->
+    <div id="view-teacher-login" class="view">
+        <h2>[ ADMIN_AUTHENTICATION ]</h2>
+        <input type="password" id="teacher-pass" placeholder="> Password Admin (admin)">
+        <button onclick="loginTeacher()">MASUK SYSTEM</button>
+        <button class="btn-danger" onclick="showView('view-home')">BATAL</button>
+    </div>
+
+    <!-- VIEW: TEACHER DASHBOARD -->
+    <div id="view-teacher-dash" class="view">
+        <h2>[ CONTROL_CENTER ]</h2>
+        <div style="text-align:center; margin-bottom: 20px;">
+            <p style="color: var(--text-dim); margin-bottom: 5px;">PIN SESI SAAT INI:</p>
+            <h1 id="display-pin" style="font-size: 42px; margin: 0; letter-spacing: 4px;">-</h1>
+        </div>
+        <button onclick="generateNewGame()">GENERATE SESSION / PIN BARU</button>
+        <h3>🏆 RANKING PERETASAN</h3>
+        <div id="ranking-list"></div>
+    </div>
+
+    <!-- VIEW: STUDENT SETUP -->
+    <div id="view-student-setup" class="view">
+        <h2>[ INITIALIZE_PROFILE ]</h2>
+        <input type="text" id="student-name" placeholder="> Nama Panggilan">
+        <input type="text" id="student-pass" placeholder="> Password Rahasia (4 Karakter)" maxlength="4" oninput="filterPassword(this)">
+        
+        <p style="font-size: 12px; margin-bottom: 5px; text-align: center; color: var(--text-dim);">Karakter Enkripsi Diterima:</p>
+        <div class="allowed-chars" id="allowed-chars-display"></div>
+
+        <button onclick="registerStudent()">ENKRIPSI & SIMPAN</button>
+    </div>
+
+    <!-- VIEW: STUDENT DASHBOARD -->
+    <div id="view-student-dash" class="view">
+        <h2>USER: <span id="dash-student-name"></span></h2>
+        <p style="text-align:center;">POIN PERETASAN: <strong id="dash-student-score" class="score-badge">0</strong></p>
+        <h3>TARGET TERSEDIA</h3>
+        <div id="target-list"></div>
+    </div>
+
+    <!-- VIEW: HACKING SCREEN -->
+    <div id="view-hack" class="view">
+        <h2>🕵️ MERETAS: <span id="hack-target-name"></span></h2>
+        <div class="password-display" id="hack-progress-display">****</div>
+        <p id="hack-status" style="text-align: center; color: var(--primary); font-weight: bold;">[ PENETRASI LAYER 1/4 ]</p>
+        
+        <div class="question-box">
+            <p style="margin-top: 0; color: var(--text-dim); font-size: 12px;">SOAL_ENKRIPSI:</p>
+            <p id="hack-question" style="font-size: 15px; line-height: 1.4; margin: 0;"></p>
+        </div>
+        
+        <input type="text" id="hack-answer" placeholder="> Ketik Kunci Dekripsi...">
+        <button onclick="submitAnswer()">DEKRIPSI KARAKTER</button>
+        <button class="btn-danger" onclick="showView('view-student-dash')">BATALKAN RETASAN</button>
+    </div>
+</div>
+
+<script>
+    // DATABASE SOAL DARI GURU (18 KARAKTER KHUSUS)
+    const dbKarakter = {
+        '!': { q: "Karakter apakah yang muncul jika kamu menekan tombol Shift bersamaan dengan tombol angka 1?", a: ["!", "tanda seru"] },
+        'q': { q: "Pada baris atas tombol huruf (susunan QWERTY), huruf apakah yang terletak di paling kiri?", a: ["q"] },
+        '@': { q: "Simbol apakah yang muncul pada layar jika kamu menekan tombol Shift bersamaan dengan angka 2 (biasa untuk email)?", a: ["@", "at", "keong"] },
+        '(': { q: "Untuk membuat tanda kurung buka (, tombol angka berapa yang harus ditekan bersamaan dengan tombol Shift?", a: ["9", "angka 9", "sembilan"] },
+        '*': { q: "Simbol apakah yang ada di tombol angka 8 (ditekan bersama Shift) yang digunakan sebagai tanda perkalian di komputer?", a: ["*", "bintang", "asterisk"] },
+        '5': { q: "Pada baris angka bagian atas keyboard, angka berapakah yang posisinya berada tepat di antara angka 4 dan angka 6?", a: ["5", "lima"] },
+        '#': { q: "Simbol tagar (hashtag) # berada pada tombol angka berapa jika ditekan bersamaan dengan tombol Shift?", a: ["3", "angka 3", "tiga"] },
+        '?': { q: "Jika kamu menekan tombol Shift bersamaan dengan tombol garis miring (/), simbol apakah yang akan muncul?", a: ["?", "tanda tanya"] },
+        '%': { q: "Simbol persen (%) yang biasa digunakan untuk menyatakan diskon terletak di tombol angka berapa (dengan Shift)?", a: ["5", "angka 5", "lima"] },
+        ')': { q: "Untuk mengetik tanda kurung tutup ), tombol angka berapa yang ditekan bersamaan dengan Shift?", a: ["0", "angka 0", "nol"] },
+        '=': { q: "Simbol apakah yang berada di tombol yang sama dengan tanda tambah (+), tetapi muncul jika ditekan tanpa Shift?", a: ["=", "sama dengan"] },
+        'u': { q: "Huruf vokal apakah yang posisinya terletak tepat di antara huruf Y dan huruf O pada baris atas keyboard?", a: ["u"] },
+        '$': { q: "Simbol mata uang dolar ($) akan muncul jika kamu menekan tombol Shift bersamaan dengan tombol angka berapa?", a: ["4", "angka 4", "empat"] },
+        '<': { q: "Jika kamu menekan Shift bersamaan dengan tombol koma (,), simbol matematika apakah yang akan muncul di layar?", a: ["<", "lebih kecil", "kurang dari"] },
+        '"': { q: "Untuk mengetik tanda petik dua (\"), tombol simbol manakah yang harus ditekan bersamaan dengan tombol Shift?", a: ["'", "petik satu", "tanda petik satu"] },
+        '&': { q: "Simbol & (ampersand) yang berarti 'dan' terletak pada tombol angka berapa jika ditekan bersamaan dengan Shift?", a: ["7", "angka 7", "tujuh"] },
+        'z': { q: "Pada susunan keyboard, di baris manakah letak posisi huruf Z (baris atas, tengah, atau bawah)?", a: ["bawah", "baris bawah"] },
+        '^': { q: "Simbol sisip/pangkat (^) berada pada tombol angka berapa jika ditekan bersamaan dengan tombol Shift?", a: ["6", "angka 6", "enam"] }
+    };
+
+    const allowedCharsList = Object.keys(dbKarakter);
+    document.getElementById('allowed-chars-display').innerText = allowedCharsList.join("  ");
+
+    function filterPassword(inputElement) {
+        let ketikanSiswa = inputElement.value.toLowerCase(); 
+        let hasilFilter = "";
+
+        for (let i = 0; i < ketikanSiswa.length; i++) {
+            if (allowedCharsList.includes(ketikanSiswa[i])) {
+                hasilFilter += ketikanSiswa[i];
+            }
+        }
+        inputElement.value = hasilFilter;
+    }
+
+    function getQuestionForChar(char) {
+        return dbKarakter[char.toLowerCase()];
+    }
+
+    let currentUser = null;
+    let currentTarget = null;
+    let currentHackIndex = 0;
+    let currentQuestionData = null;
+
+    window.addEventListener('storage', () => {
+        if(currentUser === 'teacher') renderTeacherDash();
+        else if(currentUser && currentUser !== 'teacher') renderStudentDash();
+    });
+
+    function showView(viewId) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById(viewId).classList.add('active');
+    }
+
+    function loginTeacher() {
+        const pass = document.getElementById('teacher-pass').value;
+        if (pass === 'admin') {
+            currentUser = 'teacher';
+            showView('view-teacher-dash');
+            renderTeacherDash();
+        } else alert('AUTHENTICATION_FAILED: Password Admin Salah!');
+    }
+
+    function generateNewGame() {
+        if(confirm("RESET SYSTEM: Buat game baru dan reset seluruh skor?")){
+            const newPin = Math.floor(1000 + Math.random() * 9000).toString();
+            const gameState = { pin: newPin, students: {} };
+            localStorage.setItem('gameState', JSON.stringify(gameState));
+            renderTeacherDash();
+        }
+    }
+
+    function renderTeacherDash() {
+        const state = JSON.parse(localStorage.getItem('gameState'));
+        if (!state) return;
+        
+        document.getElementById('display-pin').innerText = state.pin;
+        const rankingList = document.getElementById('ranking-list');
+        rankingList.innerHTML = '';
+
+        const sortedStudents = Object.keys(state.students).sort((a, b) => state.students[b].score - state.students[a].score);
+
+        sortedStudents.forEach((name, index) => {
+            const data = state.students[name];
+            rankingList.innerHTML += `
+                <div class="student-item">
+                    <span><strong>[#${index + 1}]</strong> ${name}</span>
+                    <span class="score-badge">${data.score} PTS</span>
+                </div>
+            `;
+        });
+    }
+
+    function joinGame() {
+        const pin = document.getElementById('join-pin').value;
+        const state = JSON.parse(localStorage.getItem('gameState'));
+        
+        if (state && state.pin === pin) showView('view-student-setup');
+        else alert('ERROR: PIN Sesi Tidak Ditemukan!');
+    }
+
+    function registerStudent() {
+        const name = document.getElementById('student-name').value.trim();
+        const pass = document.getElementById('student-pass').value.trim().toLowerCase();
+
+        if (!name) return alert('ERROR: Nama User Wajib Diisi!');
+        if (pass.length !== 4) return alert('ERROR: Password Harus 4 Karakter!');
+
+        const state = JSON.parse(localStorage.getItem('gameState'));
+        if (state.students[name]) return alert('ERROR: Nama Sudah Terdaftar!');
+
+        state.students[name] = { password: pass, score: 0, hackedBy: [] };
+        localStorage.setItem('gameState', JSON.stringify(state));
+
+        currentUser = name;
+        showView('view-student-dash');
+        renderStudentDash();
+    }
+
+    function renderStudentDash() {
+        const state = JSON.parse(localStorage.getItem('gameState'));
+        const myData = state.students[currentUser];
+        if(!myData) return;
+
+        document.getElementById('dash-student-name').innerText = currentUser;
+        document.getElementById('dash-student-score').innerText = myData.score;
+
+        const targetList = document.getElementById('target-list');
+        targetList.innerHTML = '';
+
+        Object.keys(state.students).forEach(targetName => {
+            if (targetName !== currentUser) {
+                const targetData = state.students[targetName];
+                const alreadyHacked = targetData.hackedBy.includes(currentUser);
+
+                targetList.innerHTML += `
+                    <div class="student-item">
+                        <span>👤 ${targetName}</span>
+                        ${alreadyHacked 
+                            ? `<span style="color: var(--primary); font-weight:bold;">[TERRETAS ✅]</span>` 
+                            : `<button style="width:auto; margin:0; padding:6px 15px;" onclick="startHack('${targetName}')">RETAS!</button>`
+                        }
+                    </div>
+                `;
+            }
+        });
+    }
+
+    function startHack(targetName) {
+        currentTarget = targetName;
+        currentHackIndex = 0;
+        document.getElementById('hack-target-name').innerText = targetName;
+        document.getElementById('hack-answer').value = '';
+        updateHackDisplay();
+        showView('view-hack');
+    }
+
+    function updateHackDisplay() {
+        const state = JSON.parse(localStorage.getItem('gameState'));
+        const realPassword = state.students[currentTarget].password;
+        
+        let displayStr = "";
+        for(let i=0; i<4; i++) {
+            if (i < currentHackIndex) displayStr += realPassword[i];
+            else displayStr += "*";
+        }
+        document.getElementById('hack-progress-display').innerText = displayStr;
+        
+        if (currentHackIndex < 4) {
+            document.getElementById('hack-status').innerText = `[ PENETRASI LAYER ${currentHackIndex + 1}/4 ]`;
+            
+            const targetChar = realPassword[currentHackIndex];
+            currentQuestionData = getQuestionForChar(targetChar);
+            
+            document.getElementById('hack-question').innerText = currentQuestionData.q;
+        } else {
+            alert(`🎉 SYSTEM HACKED! Password ${currentTarget} adalah [ ${realPassword} ]`);
+            
+            state.students[currentUser].score += 1;
+            state.students[currentTarget].score -= 1;
+            state.students[currentTarget].hackedBy.push(currentUser);
+            localStorage.setItem('gameState', JSON.stringify(state));
+
+            showView('view-student-dash');
+            renderStudentDash();
+            window.dispatchEvent(new Event('storage')); 
+        }
+    }
+
+    function submitAnswer() {
+        const answer = document.getElementById('hack-answer').value.toLowerCase().trim();
+        const isCorrect = currentQuestionData.a.some(correctAnswer => answer === correctAnswer.toLowerCase());
+
+        if (isCorrect) {
+            alert('✅ DEKRIPSI BERHASIL! 1 Layer Terbuka.');
+            currentHackIndex++;
+            document.getElementById('hack-answer').value = '';
+            updateHackDisplay();
+        } else {
+            alert('❌ DEKRIPSI GAGAL! Kunci salah.');
+        }
+    }
+</script>
+</body>
+</html>
